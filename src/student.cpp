@@ -70,24 +70,76 @@ string display(Stack& s) {
 // =============================================================================
 
 // SOAL 1
-bool push(Stack& s, int nilai) {
-    return false;
+bool push(Stack &s, int nilai) {
+    Node* newNode = new Node;
+
+    if (newNode == nullptr) {
+        return false;
+    }
+    
+    newNode->data = nilai;
+    newNode->next = s.top;
+    s.top = newNode;
+
+    return true;
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (isEmpty(s)) {
+        cout << "Stack Kosong!" << endl;
+        return false;
+    }
+
+    Node* temp = s.top;
+    nilai = temp->data;
+    s.top = s.top->next;
+    delete temp;
+
+    return true;
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    while (!isEmpty(s)) {
+        Node* temp = s.top;
+        s.top = s.top->next;
+        delete temp;
+    }
+    
 }
 
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
-}
+    Stack st;
+    inisialisasi(st);
 
+    for (int i = 0; ekspresi[i] != '\0'; i++) {
+        char c = ekspresi[i];
+
+        if (c == '(' || c == '[' || c == '{') {
+            push(st, c);
+        }
+        else if (c == ')' || c == ']' || c == '}') {
+            int topChar;
+            
+            if (!pop(st, topChar)) {
+                return false;
+            }
+
+            if ((c == ')' && topChar != '(') ||
+                (c == ']' && topChar != '[') ||
+                (c == '}' && topChar != '{')) {
+                clear(st);
+                return false;
+            }
+        }
+    }
+
+    bool seimbang = isEmpty(st);
+    clear(st);
+    return seimbang;
+}
 // =============================================================================
 // MAIN() — memeragakan sesi mengetik. TIDAK dinilai, bebas diubah.
 // =============================================================================
